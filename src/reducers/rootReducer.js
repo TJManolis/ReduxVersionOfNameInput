@@ -1,7 +1,7 @@
 import { CHANGE_FIRST_NAME } from "../constants/action-types";
 
 const initialState = {
-  firstName: "User"
+  firstName: "First Name"
 };
 
 const rootReducer = (state = initialState, action) => {

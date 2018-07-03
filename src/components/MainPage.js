@@ -9,7 +9,7 @@ class MainPage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      firstName: "Tom"
+      firstName: "Last Name"
     };
   }
 
@@ -21,8 +21,8 @@ class MainPage extends React.Component {
   render() {
     return (
       <div className="App">
-        <Welcome firstName={this.state.firstName} />
-        <NameInput namechange={this.namechange} />
+        <Welcome lastName={this.state.firstName} />
+        <NameInput />
       </div>
     );
   }

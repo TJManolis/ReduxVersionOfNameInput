@@ -1,5 +1,5 @@
 import React from "react";
-import ReactDOM from "react-dom";
+import { connect } from "react-redux";
 
 import "../styles.css";
 
@@ -9,8 +9,14 @@ class Welcome extends React.Component {
   }
 
   render() {
-    return <h1>Hello {this.props.firstName}!</h1>;
+    let { firstName, lastName } = this.props;
+    return <h1>Hello {lastName + ", " + firstName}!</h1>;
   }
 }
 
-export default Welcome;
+let mapStateToProps = state => {
+  return { firstName: state.firstName };
+};
+
+const ConnectedWelcome = connect(mapStateToProps)(Welcome);
+export default ConnectedWelcome;
