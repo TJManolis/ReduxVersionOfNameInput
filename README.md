@@ -1,2 +1,0 @@
-# ReduxVersionOfNameInput
-Created with CodeSandbox
