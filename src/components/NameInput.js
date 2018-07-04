@@ -1,8 +1,4 @@
 import React from "react";
-import { connect } from "react-redux";
-import { changeFirstName } from "../actions/actions";
-
-import "../styles.css";
 
 class NameInput extends React.Component {
   constructor(props) {
@@ -22,10 +18,4 @@ class NameInput extends React.Component {
   }
 }
 
-let mapDispatchToProps = dispatch => {
-  return { changeFirstName: firstName => dispatch(changeFirstName(firstName)) };
-};
-
-const ConnectedNameInput = connect(null, mapDispatchToProps)(NameInput);
-
-export default ConnectedNameInput;
+export default NameInput;

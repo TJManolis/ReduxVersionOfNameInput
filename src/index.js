@@ -1,17 +1,19 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import MainPage from "./components/MainPage";
 import { Provider } from "react-redux";
 import { createStore } from "redux";
-import rootReducer from "./reducers/rootReducer";
-import { changeFirstName } from "./actions/actions";
 
+import MainPage from "./components/MainPage";
+import rootReducer from "./reducers/rootReducer";
 import "./styles.css";
 
 let store = createStore(rootReducer);
 
 window.store = store;
-window.changeFirstName = changeFirstName;
+store.subscribe(() => {
+  console.log("something happened");
+  console.log(store.getState());
+});
 
 ReactDOM.render(
   <Provider store={store}>

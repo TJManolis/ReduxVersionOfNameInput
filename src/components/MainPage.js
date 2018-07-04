@@ -1,9 +1,6 @@
 import React from "react";
-import ReactDOM from "react-dom";
-import Welcome from "./Welcome";
-import NameInput from "./NameInput";
-
-import "../styles.css";
+import Welcome from "../connectedComponents/ConnectedWelcome";
+import NameInput from "../connectedComponents/ConnectedNameInput";
 
 class MainPage extends React.Component {
   constructor(props) {
@@ -12,11 +9,6 @@ class MainPage extends React.Component {
       firstName: "Last Name"
     };
   }
-
-  namechange = event => {
-    console.log(event.target.value);
-    this.setState({ ...this.state, firstName: event.target.value });
-  };
 
   render() {
     return (
