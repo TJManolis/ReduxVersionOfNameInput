@@ -1,21 +1,14 @@
 import React from "react";
 import Dropdown from "./Dropdown";
-import { calculateWip, round } from "../helpers/CalculatorHelpers";
+import { calculateWip, unitSecondsMap } from "../helpers/CalculatorHelpers";
 
 class WIPCalculator extends React.Component {
   constructor(props) {
     super(props);
+    console.log(Object.keys(unitSecondsMap));
     this.state = {
-      units: [
-        { unit: "seconds" },
-        { unit: "minutes" },
-        { unit: "hours" },
-        { unit: "days" },
-        { unit: "weeks" },
-        { unit: "months" },
-        { unit: "quarters" },
-        { unit: "years" }
-      ],
+      units: Object.keys(unitSecondsMap),
+      calculationType: "Throughput",
       throughput: 0,
       throughputUnit: "seconds",
       flowtime: 0,
@@ -23,6 +16,10 @@ class WIPCalculator extends React.Component {
       wip: 0
     };
   }
+  changeCalculationType = event => {
+    this.setState({ ...this.state, calculationType: event.target.value });
+  };
+
   changeThroughput = event => {
     this.setState({ ...this.state, throughput: event.target.value });
   };
@@ -43,7 +40,11 @@ class WIPCalculator extends React.Component {
     console.log("Hey Kids I'm a computer");
 
     console.log(
-      "Throughput: " + this.state.throughput + " " + this.state.throughputUnit
+      this.state.calculationType +
+        ": " +
+        this.state.throughput +
+        " " +
+        this.state.throughputUnit
     );
 
     console.log(
@@ -51,25 +52,32 @@ class WIPCalculator extends React.Component {
     );
 
     let wip = calculateWip(
+      this.state.calculationType,
       this.state.throughput,
       this.state.throughputUnit,
       this.state.flowtime,
       this.state.flowtimeUnit
     );
 
-    this.setState({ ...this.state, wip: round(wip) });
+    this.setState({ ...this.state, wip: wip });
   };
   render() {
     return (
       <div className="App">
         <h1>Calculate WIP</h1>
         <div>
-          <h5>Throughput</h5>
+          <Dropdown
+            defaultValue={this.state.calculationType}
+            onChange={this.changeCalculationType}
+            values={["Throughput", "Takt"]}
+          />
+          <br />
           <input onChange={this.changeThroughput} />
           <Dropdown
             values={this.state.units}
             displayValue="unit"
             selectValue="unit"
+            defaultValue={this.state.throughputUnit}
             onChange={this.changeThroughputUnits}
           />
         </div>
@@ -81,6 +89,7 @@ class WIPCalculator extends React.Component {
             values={this.state.units}
             displayValue="unit"
             selectValue="unit"
+            defaultValue={this.state.flowtimeUnit}
             onChange={this.changeFlowtimeUnits}
           />
         </div>

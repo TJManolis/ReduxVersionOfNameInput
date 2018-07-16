@@ -1,40 +1,50 @@
-const calculateWip = (rate, rateUnit, time, timeUnit) => {
-  let rateInSeconds = getRateInSeconds(rate, rateUnit);
-  let timeSeconds = getSeconds(time, timeUnit);
-
-  let wip = rateInSeconds * timeSeconds;
-  // let greatestUnit = findGreatestUnit(valueOneUnit, timeUnit);
-
-  console.log("rateInSeconds = " + rateInSeconds);
-  console.log("timeSeconds = " + timeSeconds);
-  // return wip;
-  console.log("notROunded " + wip);
-  return wip;
+const unitSecondsMap = {
+  seconds: 1,
+  minutes: 60,
+  hours: 3600,
+  days: 86400,
+  weeks: 604800,
+  months: 2628000,
+  quarters: 7884000,
+  years: 31536000
 };
 
-const findGreatestUnit = (unitOne, unitTwo) => {
-  let unitOneSize = getSeconds(1, unitOne);
-  let unitTwoSize = getSeconds(1, unitTwo);
-  if (unitOneSize >= unitTwoSize) {
-    return unitOne;
+/**
+ * calculationType: "Throughput" or 'Takt'
+ * vale:
+ * When calculationTpe is 'Takt' this should be how long it takes to create one unit.
+ * When calculationTpe is 'Throughput' this should be how many units are created in the givent tiemframe.
+ */
+const calculateWip = (calculationType, value, valueUnits, time, timeUnit) => {
+  let timeSeconds = unitSecondsMap[timeUnit] * time;
+  let rateInSeconds;
+  if (calculationType === "Takt") {
+    rateInSeconds = unitSecondsMap[valueUnits] / value;
   } else {
-    return unitTwo;
+    // Throughput
+    rateInSeconds = value / unitSecondsMap[valueUnits];
   }
+  let wip = rateInSeconds * timeSeconds;
+  return round(wip);
 };
 
 const round = value => {
   if (value === 0) {
     return 0;
   }
-  if (value.toString().includes("e-")) {
+  if (value.toString().includes("e")) {
+    // raw scientific  value rounding
     return roundScientific(value);
   } else if (value.toString().length > 10) {
     if (value.toString().split(".")[0].length > 7) {
+      //pre decimal rounding
       return roundScientific(value.toExponential());
     } else {
+      //post decimal rounding
       return Math.round(value * 1000) / 1000;
     }
   } else {
+    // Small (non scientific) values under total length 10
     return value;
   }
 };
@@ -49,59 +59,4 @@ const roundScientific = value => {
   return numberToReturn + "e" + numArray[1];
 };
 
-const getRateInSeconds = (value, unit) => {
-  switch (unit) {
-    case "seconds":
-      return value;
-    case "minutes":
-      return value / 60;
-    case "hours":
-      return value / 60 / 60;
-    case "days":
-      return value / 60 / 60 / 24;
-    case "weeks":
-      return value / 60 / 60 / 24 / 7;
-    case "months":
-      return value / 60 / 60 / 24 / 30;
-    case "quarters":
-      return value / 60 / 60 / 24 / 91;
-    case "years":
-      return value / 60 / 60 / 24 / 365;
-
-    default:
-      return 0;
-  }
-};
-
-const getSeconds = (value, unit) => {
-  switch (unit) {
-    case "seconds":
-      return value;
-    case "minutes":
-      return value * 60;
-    case "hours":
-      return value * 60 * 60;
-    case "days":
-      return value * 60 * 60 * 24;
-    case "weeks":
-      return value * 60 * 60 * 24 * 7;
-    case "months":
-      return value * 60 * 60 * 24 * 30;
-    case "quarters":
-      return value * 60 * 60 * 24 * 91;
-    case "years":
-      return value * 60 * 60 * 24 * 365;
-
-    default:
-      return 0;
-  }
-};
-
-export {
-  calculateWip,
-  findGreatestUnit,
-  round,
-  roundScientific,
-  getRateInSeconds,
-  getSeconds
-};
+export { calculateWip, roundScientific, unitSecondsMap };
